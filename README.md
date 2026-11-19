@@ -242,6 +242,8 @@ Nhấp đúp chuột mở trực tiếp file [preview.html](file:///d:/graduatio
 ### Cách 3: Khởi chạy bằng Docker & Docker Compose
 Hệ thống cung cấp sẵn [docker-compose.yml](file:///d:/graduation/docker-compose.yml), [Dockerfile.backend](file:///d:/graduation/Dockerfile.backend) và [Dockerfile.frontend](file:///d:/graduation/Dockerfile.frontend):
 
+Dockerfile backend tự build JAR bằng Maven từ mã nguồn; không cần commit hoặc chuẩn bị sẵn thư mục `backend/target`.
+
 ```bash
 docker compose up -d --build
 ```

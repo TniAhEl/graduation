@@ -1,8 +1,15 @@
-# Java 17 Compatible Dockerfile for Spring Boot Backend
+# Build the Spring Boot application from source
+FROM maven:3.9-eclipse-temurin-17 AS build
+WORKDIR /workspace
+COPY backend/pom.xml backend/pom.xml
+COPY backend/src backend/src
+RUN mvn -f backend/pom.xml -DskipTests package
+
+# Java 17 runtime image
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-COPY backend/target/*.jar app.jar
+COPY --from=build /workspace/backend/target/invitation-backend-1.0.0.jar app.jar
 EXPOSE 8088
 ENV SERVER_PORT=8088
-ENV SPRING_PROFILES_ACTIVE=dev
+ENV SPRING_PROFILES_ACTIVE=prod
 ENTRYPOINT ["java", "-jar", "app.jar"]
