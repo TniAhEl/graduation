@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thiệp Mời Lễ Tốt Nghiệp Đại Học — Niên Khóa 2022 – 2026</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Playfair Display & Be Vietnam Pro (tối ưu dấu tiếng Việt) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Be Vietnam Pro"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            navy: '#0F2342',
+            navyLight: '#1B365D',
+            champagne: '#C59B27',
+            champagneLight: '#F6EED8',
+            cream: '#FAF8F3',
+            ivory: '#FFFFFF',
+            slateText: '#475569',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Hiệu ứng xuất hiện mượt mà khi cuộn trang */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1), transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Hiệu ứng chuyển đổi nội dung khi đổi nhóm khách */
+    .content-transition {
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .content-updating {
+      opacity: 0.35;
+      transform: translateY(4px);
+    }
+
+    /* Họa tiết giấy học thuật tinh tế */
+    .bg-academic-paper {
+      background-color: #FAF8F3;
+      background-image: radial-gradient(#CBD5E1 0.8px, transparent 0.8px);
+      background-size: 24px 24px;
+    }
+
+    /* Chế độ chữ lớn dễ đọc dành riêng cho nhóm Gia đình & Người lớn tuổi trên Mobile */
+    body.elder-friendly .adaptive-body {
+      font-size: 1.08rem;
+      line-height: 1.8;
+      color: #1E293B;
+    }
+    @media (min-width: 640px) {
+      body.elder-friendly .adaptive-body {
+        font-size: 1.15rem;
+      }
+    }
+  </style>
+</head>
+<body class="bg-cream text-navy font-sans antialiased selection:bg-champagneLight selection:text-navy pb-20">
+
+  <!-- ===================================================================== -->
+  <!-- THANH CÔNG CỤ TẠO & SAO CHÉP LINK MỜI (TỰ ĐỘNG THU GỌN KHI GỬI KHÁCH) -->
+  <!-- ===================================================================== -->
+  <div id="builder-container" class="fixed bottom-4 right-4 z-50 transition-all duration-300 max-w-[calc(100vw-2rem)]">
+    
+    <!-- Nút thu gọn nhỏ gọn ở góc dưới bên phải (mặc định hiển thị khi khách mở link có tham số) -->
+    <button 
+      id="builder-compact-btn" 
+      onclick="toggleBuilder(true)" 
+      title="Tùy chỉnh & Tạo link thiệp mời"
+      class="hidden items-center gap-2 bg-navy/85 hover:bg-navy backdrop-blur-md text-cream px-3.5 py-2.5 rounded-full shadow-lg border border-champagne/40 text-xs font-medium transition active:scale-95"
+    >
+      <svg class="w-4 h-4 text-champagne" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+      </svg>
+      <span class="hidden sm:inline">Tạo link mời</span>
+    </button>
+
+    <!-- Bảng điều khiển đầy đủ (mặc định mở khi bạn truy cập trang gốc để tạo link) -->
+    <div id="builder-panel" class="w-[92vw] sm:w-[680px] lg:w-[820px] bg-navy/95 backdrop-blur-md text-cream rounded-2xl shadow-2xl border border-champagne/30 p-3.5 sm:p-4">
+      <div class="flex items-center justify-between mb-2.5 pb-2 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full bg-champagne animate-pulse"></span>
+          <span class="text-xs font-semibold uppercase tracking-wider text-champagne">Công cụ tạo Link Thiệp Tốt Nghiệp</span>
+        </div>
+        <button onclick="toggleBuilder(false)" class="inline-flex items-center gap-1 text-xs text-slate-300 hover:text-white px-2 py-1 rounded-lg hover:bg-white/10 transition">
+          <span>Thu gọn</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+      </div>
+
+      <!-- Chọn nhóm đối tượng -->
+      <div class="grid grid-cols-3 gap-1.5 bg-navyLight/80 p-1 rounded-xl mb-2.5">
+        <button type="button" data-group-btn="family" onclick="setGuestGroup('family')" class="group-tab py-2 px-2 rounded-lg text-xs font-medium transition text-center">
+          Gia đình & Người thân
+        </button>
+        <button type="button" data-group-btn="friends" onclick="setGuestGroup('friends')" class="group-tab py-2 px-2 rounded-lg text-xs font-medium transition text-center">
+          Bạn bè & Đồng môn
+        </button>
+        <button type="button" data-group-btn="mentors" onclick="setGuestGroup('mentors')" class="group-tab py-2 px-2 rounded-lg text-xs font-medium transition text-center">
+          Thầy Cô & Hướng dẫn
+        </button>
+      </div>
+
+      <!-- Ô nhập tên Khách mời, Tên Tân Cử Nhân & Nút Copy Link -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+        <div class="flex-1">
+          <input 
+            id="guest-name-input" 
+            type="text" 
+            placeholder="Tên khách mời (VD: Ba Mẹ, Bạn Linh, Thầy Hùng)..." 
+            oninput="handleGuestNameInput(this.value)"
+            class="w-full bg-navyLight border border-white/15 focus:border-champagne rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 outline-none transition"
+          />
+        </div>
+        <div class="flex-1">
+          <input 
+            id="grad-name-input" 
+            type="text" 
+            placeholder="Tên Tân Cử Nhân (VD: Hà Lê Tín)..." 
+            oninput="handleGradNameInput(this.value)"
+            class="w-full bg-navyLight border border-white/15 focus:border-champagne rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 outline-none transition"
+          />
+        </div>
+        <button onclick="copyShareableLink()" class="inline-flex items-center justify-center gap-1.5 bg-champagne hover:bg-amber-500 text-navy font-semibold text-xs px-4 py-2.5 rounded-xl shadow transition active:scale-95 whitespace-nowrap">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+          <span>Sao chép Link mời</span>
+        </button>
+      </div>
+
+      <!-- Hiển thị tham số URL xem trước -->
+      <div class="mt-2 pt-1.5 flex items-center justify-between text-[11px] text-slate-400">
+        <span class="truncate font-mono" id="preview-url-display">?group=family&name=Ba%20M%E1%BA%B9</span>
+        <span class="hidden sm:inline">Gửi link này trực tiếp qua Zalo / Messenger</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thông báo Toast -->
+  <div id="toast-box" class="fixed top-4 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-5 z-50 pointer-events-none opacity-0 -translate-y-3 transition-all duration-300 w-[90vw] sm:w-auto">
+    <div class="bg-navy text-cream px-4 py-3 rounded-2xl shadow-xl border border-champagne/40 flex items-center gap-2.5 text-sm justify-center">
+      <span class="w-5 h-5 rounded-full bg-champagne/20 text-champagne flex items-center justify-center text-xs font-bold">✓</span>
+      <span id="toast-message">Đã sao chép đường dẫn lời mời!</span>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- PHẦN 1: OPENING (MỞ ĐẦU & ĐỊNH DANH TÂN CỬ NHÂN)                      -->
+  <!-- ===================================================================== -->
+  <header class="relative min-h-[90vh] flex flex-col justify-between bg-academic-paper border-b border-slate-200/80 overflow-hidden">
+    <!-- Dải viền vàng Champagne & Xanh Navy trên cùng -->
+    <div class="w-full h-2 bg-gradient-to-r from-navy via-champagne to-navy"></div>
+
+    <!-- Thanh điều hướng tối giản -->
+    <nav class="max-w-4xl mx-auto w-full px-5 pt-5 flex items-center justify-between text-xs tracking-widest uppercase text-slateText">
+      <span class="font-semibold text-navy">CLASS OF 2026</span>
+      <div class="hidden md:flex items-center gap-6">
+        <a href="#loi-moi" class="hover:text-champagne transition">Lời ngỏ</a>
+        <a href="#thoi-gian-dia-diem" class="hover:text-champagne transition">Thời gian & Địa điểm</a>
+        <a href="#huong-dan-di-chuyen" class="hover:text-champagne transition">Gửi xe & Lưu ý</a>
+        <a href="#loi-cam-on" class="hover:text-champagne transition">Cảm ơn</a>
+      </div>
+      <span class="text-champagne font-bold">22.11.2026</span>
+    </nav>
+
+    <!-- Nội dung chính Opening -->
+    <div class="max-w-3xl mx-auto px-5 py-12 sm:py-16 text-center my-auto content-transition">
+      
+      <!-- Biểu tượng Mũ Cử Nhân & Vòng Nguyệt Quế SVG -->
+      <div class="mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-navy text-champagne flex items-center justify-center shadow-lg border-2 border-champagne/50 mb-6">
+        <svg class="w-9 h-9 sm:w-11 sm:h-11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+      </div>
+
+      <!-- Nhãn sự kiện -->
+      <p class="text-xs sm:text-sm uppercase tracking-[0.22em] text-navy font-semibold mb-2">
+        LỄ TỐT NGHIỆP ĐẠI HỌC • NIÊN KHÓA 2022 – 2026
+      </p>
+
+      <!-- Huy hiệu phân loại đối tượng -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-champagneLight/80 border border-champagne/40 text-navy text-xs font-semibold tracking-wide mb-6">
+        <span class="w-1.5 h-1.5 rounded-full bg-champagne"></span>
+        <span id="opening-badge">Thiệp mời trân trọng • Gia đình & Người thân</span>
+      </div>
+
+      <!-- Lời chào cá nhân hóa nổi bật -->
+      <h1 id="opening-salutation" class="font-serif text-3xl sm:text-5xl lg:text-[56px] font-bold text-navy leading-[1.2] tracking-tight mb-5">
+        Kính mời <span class="italic text-champagne">Ba Mẹ</span> <br />
+        đến dự Lễ Tốt Nghiệp của con
+      </h1>
+
+      <!-- Khung vinh danh Tân Cử Nhân -->
+      <div class="inline-block bg-white/90 border border-slate-200/90 rounded-2xl px-6 py-3.5 shadow-sm mb-6">
+        <p class="text-[11px] uppercase tracking-[0.2em] text-slateText font-medium mb-1">Tân Cử Nhân</p>
+        <p id="graduate-name-display" class="font-serif text-xl sm:text-2xl font-bold text-navy">Hà Lê Tín</p>
+        <p class="text-xs text-slateText mt-0.5">Chuyên ngành Công nghệ Thông tin • Khóa 2022 – 2026</p>
+      </div>
+
+      <!-- Câu dẫn mở đầu -->
+      <p id="opening-subtitle" class="adaptive-body max-w-xl mx-auto text-base sm:text-lg text-slateText leading-relaxed mb-9">
+        Cột mốc trưởng thành sau 4 năm đại học sẽ chỉ thật sự trọn vẹn khi có sự hiện diện, ánh mắt tự hào và những lời chúc phúc của gia đình trong ngày trọng đại này.
+      </p>
+
+      <!-- Nút hành động lớn tối ưu thao tác một tay trên Mobile -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3.5 max-w-md sm:max-w-none mx-auto">
+        <a href="#loi-moi" class="min-h-[50px] inline-flex items-center justify-center gap-2 bg-navy hover:bg-navyLight text-ivory px-7 py-3.5 rounded-full text-sm font-semibold shadow-md transition group">
+          <span>Đọc lời mời riêng</span>
+          <svg class="w-4 h-4 text-champagne group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </a>
+        <button onclick="openRsvpModal()" class="min-h-[50px] inline-flex items-center justify-center gap-2 bg-white hover:bg-champagneLight/50 text-navy border border-navy/25 px-7 py-3.5 rounded-full text-sm font-semibold transition">
+          <span>Xác nhận tham dự (RSVP)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Thanh chỉ báo tiến trình 5 bước -->
+    <div class="max-w-4xl mx-auto w-full px-4 pb-6">
+      <div class="grid grid-cols-5 gap-1 text-center text-[10px] sm:text-xs text-slateText border-t border-slate-200/80 pt-3.5">
+        <div class="font-bold text-navy">01. Mở đầu</div>
+        <div>02. Lời mời</div>
+        <div>03. Địa điểm</div>
+        <div>04. Gửi xe</div>
+        <div>05. Cảm ơn</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-5 space-y-16 sm:space-y-24 py-14 sm:py-20">
+
+    <!-- ===================================================================== -->
+    <!-- PHẦN 2: LỜI MỜI RIÊNG CÁ NHÂN HÓA (PERSONALIZED MESSAGE)              -->
+    <!-- ===================================================================== -->
+    <section id="loi-moi" class="reveal scroll-mt-10">
+      <div class="bg-ivory rounded-3xl p-7 sm:p-12 shadow-[0_8px_30px_rgb(15,35,66,0.05)] border border-slate-200/80 relative overflow-hidden content-transition">
+        <!-- Dấu ngoặc kép trang trí -->
+        <div class="absolute top-4 right-6 font-serif text-7xl sm:text-8xl text-champagneLight select-none leading-none">”</div>
+
+        <div class="flex items-center gap-2.5 text-xs font-bold uppercase tracking-widest text-champagne mb-3">
+          <span>02 / Lời ngỏ dành riêng</span>
+          <span class="h-px w-8 bg-champagne/60"></span>
+        </div>
+
+        <h2 id="message-heading" class="font-serif text-2xl sm:text-3xl font-bold text-navy mb-5 leading-snug">
+          Bốn năm đèn sách và điểm tựa mang tên Gia Đình
+        </h2>
+
+        <div id="message-body" class="adaptive-body space-y-4 text-slateText text-base leading-relaxed">
+          <!-- Render tự động theo nhóm khách -->
+        </div>
+
+        <!-- Khu vực xác nhận tham dự ngay bên dưới lời mời -->
+        <div class="mt-8 pt-7 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <p class="text-sm font-bold text-navy">Xác nhận tham dự & Hẹn giờ chụp ảnh</p>
+            <p id="rsvp-status-text" class="text-xs sm:text-sm text-slateText mt-0.5">Cho mình biết thời gian bạn/gia đình ghé qua để mình ra đón và chụp ảnh cùng nhé!</p>
+          </div>
+          <button onclick="openRsvpModal()" id="rsvp-cta-btn" class="min-h-[48px] w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-champagne hover:bg-amber-600 text-navy font-bold px-6 py-3 rounded-2xl text-sm shadow-sm transition active:scale-95 whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M5 13l4 4L19 7"></path></svg>
+            <span>Xác nhận tham dự</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- PHẦN 3: THỜI GIAN & ĐỊA ĐIỂM (EVENT LOGISTICS)                        -->
+    <!-- ===================================================================== -->
+    <section id="thoi-gian-dia-diem" class="reveal scroll-mt-10">
+      <div class="mb-7">
+        <div class="flex items-center gap-2.5 text-xs font-bold uppercase tracking-widest text-champagne mb-2">
+          <span>03 / Thông tin buổi lễ</span>
+          <span class="h-px w-8 bg-champagne/60"></span>
+        </div>
+        <h2 class="font-serif text-2xl sm:text-4xl font-bold text-navy">Thời gian & Địa điểm tổ chức</h2>
+      </div>
+
+      <div class="grid grid-cols-1 gap-6 content-transition">
+        <!-- Thẻ Thời gian -->
+        <div class="bg-ivory rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm">
+          <div class="flex items-start gap-4 mb-5">
+            <div class="w-12 h-12 rounded-2xl bg-navy text-champagne flex items-center justify-center shrink-0">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            </div>
+            <div>
+              <p class="text-xs uppercase tracking-wider text-slateText font-semibold">Ngày diễn ra buổi lễ</p>
+              <h3 class="font-serif text-xl sm:text-2xl font-bold text-navy mt-0.5">Chủ Nhật, 22 Tháng 11, 2026</h3>
+            </div>
+          </div>
+
+          <!-- Lịch trình tách bạch đón tiếp ngoài sảnh vs lễ trong hội trường -->
+          <div id="schedule-timeline" class="space-y-3 bg-cream rounded-2xl p-4 sm:p-5 border border-slate-200/60 text-sm">
+            <!-- Render tự động theo nhóm -->
+          </div>
+
+          <div class="mt-5">
+            <button onclick="downloadCalendarICS()" class="min-h-[48px] w-full inline-flex items-center justify-center gap-2 bg-champagneLight/70 hover:bg-champagneLight text-navy font-semibold text-sm py-3 px-4 rounded-2xl border border-champagne/30 transition active:scale-95">
+              <svg class="w-4 h-4 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+              <span>Lưu lịch vào điện thoại (.ICS)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Thẻ Địa điểm -->
+        <div class="bg-ivory rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm">
+          <div class="flex items-start gap-4 mb-4">
+            <div class="w-12 h-12 rounded-2xl bg-navy text-champagne flex items-center justify-center shrink-0">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            </div>
+            <div>
+              <p class="text-xs uppercase tracking-wider text-slateText font-semibold">Địa điểm tổ chức</p>
+              <h3 class="font-serif text-xl sm:text-2xl font-bold text-navy mt-0.5">Hội trường Lớn (Giảng đường Trung tâm)</h3>
+              <p class="text-sm text-slateText mt-1 leading-relaxed">
+                Khuôn viên Trường Đại học Bách Khoa — 268 Lý Thường Kiệt, Phường 14, Quận 10, TP. Hồ Chí Minh.
+              </p>
+            </div>
+          </div>
+
+          <!-- Ghi chú điểm hẹn đón khách theo nhóm -->
+          <div id="venue-access-note" class="bg-champagneLight/50 border border-champagne/40 rounded-2xl p-4 text-xs sm:text-sm text-navy leading-relaxed mb-5">
+            <!-- Render tự động theo nhóm -->
+          </div>
+
+          <a href="https://maps.google.com/?q=268+Ly+Thuong+Kiet+Quan+10+Ho+Chi+Minh" target="_blank" rel="noopener noreferrer" class="min-h-[48px] w-full inline-flex items-center justify-center gap-2 bg-navy hover:bg-navyLight text-ivory font-semibold text-sm py-3 px-4 rounded-2xl shadow-sm transition active:scale-95">
+            <svg class="w-4 h-4 text-champagne" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+            <span>Mở chỉ đường Google Maps</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- PHẦN 4: VỊ TRÍ GỬI XE & LƯU Ý KHI ĐẾN (CAMPUS MAP & ARRIVAL GUIDE)    -->
+    <!-- ===================================================================== -->
+    <section id="huong-dan-di-chuyen" class="reveal scroll-mt-10">
+      <div class="mb-7">
+        <div class="flex items-center gap-2.5 text-xs font-bold uppercase tracking-widest text-champagne mb-2">
+          <span>04 / Hướng dẫn di chuyển</span>
+          <span class="h-px w-8 bg-champagne/60"></span>
+        </div>
+        <h2 class="font-serif text-2xl sm:text-4xl font-bold text-navy">Vị trí gửi xe & Lưu ý khi đến</h2>
+        <p class="text-sm text-slateText mt-1.5">Sơ đồ phân luồng cổng trường và bãi đỗ xe được tô sáng theo gợi ý dành riêng cho bạn.</p>
+      </div>
+
+      <div class="bg-ivory rounded-3xl p-5 sm:p-9 border border-slate-200/80 shadow-sm space-y-7 content-transition">
+        
+        <!-- Sơ đồ Khuôn viên Trường Đại học (SVG trực quan) -->
+        <div class="bg-cream rounded-2xl p-3.5 sm:p-5 border border-slate-200/80">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-navy">Sơ đồ khuôn viên trường & bãi gửi xe</span>
+            <span class="inline-flex items-center gap-1.5 text-[11px] font-medium text-navy bg-champagneLight px-2.5 py-0.5 rounded-full border border-champagne/40">
+              <span class="w-2 h-2 rounded-full bg-champagne"></span> Khu vực ưu tiên của bạn
+            </span>
+          </div>
+
+          <svg viewBox="0 0 720 285" class="w-full h-auto rounded-xl bg-white border border-slate-200/80" role="img" aria-label="Sơ đồ khuôn viên trường đại học, cổng vào và bãi gửi xe">
+            <!-- Đường lớn phía trước trường -->
+            <rect x="0" y="232" width="720" height="53" fill="#E2E8F0" />
+            <line x1="20" y1="258" x2="700" y2="258" stroke="#94A3B8" stroke-width="2" stroke-dasharray="12 10" />
+            <text x="360" y="263" text-anchor="middle" fill="#1E293B" font-size="12" font-weight="700" font-family="sans-serif">ĐƯỜNG LÝ THƯỜNG KIỆT (Mặt tiền Trường Đại Học)</text>
+
+            <!-- Tòa nhà Hội trường Lớn (Trung tâm) -->
+            <rect x="210" y="22" width="300" height="82" rx="12" fill="#0F2342" />
+            <text x="360" y="54" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="700" font-family="serif">HỘI TRƯỜNG LỚN (GIẢNG ĐƯỜNG A)</text>
+            <text x="360" y="75" text-anchor="middle" fill="#F6EED8" font-size="11" font-family="sans-serif">Nơi diễn ra Nghi thức Trao bằng Tốt nghiệp</text>
+
+            <!-- Khu vực Chụp ảnh Check-in (Sân Đài Phun Nước) -->
+            <rect id="map-zone-photo" x="235" y="122" width="250" height="44" rx="10" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.5" />
+            <text x="360" y="142" text-anchor="middle" fill="#0F2342" font-size="11.5" font-weight="700" font-family="sans-serif">SÂN ĐÀI PHUN NƯỚC & BACKDROP</text>
+            <text x="360" y="157" text-anchor="middle" fill="#475569" font-size="10" font-family="sans-serif">Điểm hẹn đón khách & Chụp ảnh kỷ yếu</text>
+
+            <!-- Cổng Chính & Bãi đỗ Ô tô (Bên trái) -->
+            <rect id="map-zone-car" x="24" y="45" width="160" height="120" rx="12" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.5" />
+            <text x="104" y="76" text-anchor="middle" fill="#0F2342" font-size="12" font-weight="700" font-family="sans-serif">CỔNG CHÍNH (CỔNG 1)</text>
+            <text x="104" y="96" text-anchor="middle" fill="#334155" font-size="11" font-weight="600" font-family="sans-serif">Bãi Đỗ Ô Tô & Xe Gia Đình</text>
+            <text x="104" y="114" text-anchor="middle" fill="#475569" font-size="10" font-family="sans-serif">Cách Hội trường 40m</text>
+            <text x="104" y="130" text-anchor="middle" fill="#475569" font-size="10" font-family="sans-serif">(Có bóng mát & lối đi phẳng)</text>
+            <!-- Mũi tên từ đường vào Cổng 1 -->
+            <path d="M104 232 L104 172" stroke="#0F2342" stroke-width="2.5" />
+            <rect x="64" y="188" width="80" height="22" rx="6" fill="#0F2342" />
+            <text x="104" y="203" text-anchor="middle" fill="#F6EED8" font-size="10" font-weight="600" font-family="sans-serif">Lối vào Cổng 1</text>
+
+            <!-- Cổng Phụ & Nhà xe Máy Sinh Viên (Bên phải) -->
+            <rect id="map-zone-bike" x="536" y="45" width="160" height="120" rx="12" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.5" />
+            <text x="616" y="76" text-anchor="middle" fill="#0F2342" font-size="12" font-weight="700" font-family="sans-serif">CỔNG PHỤ (CỔNG 2)</text>
+            <text x="616" y="96" text-anchor="middle" fill="#334155" font-size="11" font-weight="600" font-family="sans-serif">Nhà Xe Máy Khu B</text>
+            <text x="616" y="114" text-anchor="middle" fill="#475569" font-size="10" font-family="sans-serif">Sức chứa lớn, gửi nhanh</text>
+            <text x="616" y="130" text-anchor="middle" fill="#475569" font-size="10" font-family="sans-serif">Đi bộ 2 phút tới Sân lễ</text>
+            <!-- Mũi tên từ đường vào Cổng 2 -->
+            <path d="M616 232 L616 172" stroke="#0F2342" stroke-width="2.5" />
+            <rect x="576" y="188" width="80" height="22" rx="6" fill="#0F2342" />
+            <text x="616" y="203" text-anchor="middle" fill="#F6EED8" font-size="10" font-weight="600" font-family="sans-serif">Lối vào Cổng 2</text>
+          </svg>
+        </div>
+
+        <!-- Chi tiết 2 khối: Hướng dẫn gửi xe & Lưu ý quan trọng -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
+          <!-- Khối 1: Vị trí gửi xe -->
+          <div>
+            <div class="flex items-center gap-2.5 mb-3.5">
+              <span class="w-8 h-8 rounded-xl bg-navy text-champagne flex items-center justify-center font-bold text-sm">P</span>
+              <h3 class="font-serif text-lg sm:text-xl font-bold text-navy">Hướng dẫn vị trí gửi xe</h3>
+            </div>
+            <ul id="parking-details-list" class="adaptive-body space-y-3 text-sm text-slateText leading-relaxed">
+              <!-- Render tự động theo nhóm -->
+            </ul>
+          </div>
+
+          <!-- Khối 2: Lưu ý thực tế trong Lễ Tốt Nghiệp -->
+          <div>
+            <div class="flex items-center gap-2.5 mb-3.5">
+              <span class="w-8 h-8 rounded-xl bg-champagneLight text-navy border border-champagne/40 flex items-center justify-center font-bold text-sm">!</span>
+              <h3 class="font-serif text-lg sm:text-xl font-bold text-navy">Lưu ý khi đến dự lễ</h3>
+            </div>
+            <ul id="arrival-notes-list" class="adaptive-body space-y-3 text-sm text-slateText leading-relaxed">
+              <!-- Render tự động theo nhóm -->
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- PHẦN 5: LỜI CẢM ƠN KẾT LẠI (CLOSING & GRATITUDE)                      -->
+    <!-- ===================================================================== -->
+    <section id="loi-cam-on" class="reveal scroll-mt-10">
+      <div class="bg-navy text-cream rounded-3xl p-7 sm:p-14 text-center relative overflow-hidden shadow-xl border border-champagne/25 content-transition">
+        <!-- Ánh sáng vàng Champagne trang trí -->
+        <div class="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-champagne/10 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -right-24 w-64 h-64 rounded-full bg-champagne/10 blur-3xl pointer-events-none"></div>
+
+        <p class="text-xs uppercase tracking-[0.25em] text-champagne font-bold mb-3">
+          05 / Lời cảm ơn
+        </p>
+
+        <h2 id="closing-heading" class="font-serif text-2xl sm:text-4xl font-bold text-white mb-4 leading-snug">
+          Cảm ơn vì đã luôn đồng hành cùng hành trình này
+        </h2>
+
+        <p id="closing-body" class="adaptive-body max-w-xl mx-auto text-slate-200 text-base leading-relaxed mb-8">
+          <!-- Render tự động theo nhóm -->
+        </p>
+
+        <!-- Chữ ký Tân Cử Nhân -->
+        <div class="mb-8">
+          <p class="font-serif italic text-xl sm:text-2xl text-champagne">Trân trọng & Biết ơn,</p>
+          <p id="closing-signature" class="text-base font-bold text-white mt-1">Tân Cử Nhân Hà Lê Tín</p>
+        </div>
+
+        <!-- Kênh liên hệ nhanh (Tân cử nhân & Người hỗ trợ đón khách tại sảnh) -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-6 border-t border-white/15">
+          <a href="tel:0909888999" class="min-h-[46px] inline-flex items-center justify-center gap-2 bg-navyLight hover:bg-white/15 text-cream text-xs sm:text-sm font-medium px-5 py-2.5 rounded-full border border-white/15 transition">
+            <svg class="w-4 h-4 text-champagne shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+            <span>Tân Cử Nhân: 0909 888 999</span>
+          </a>
+          <a href="tel:0912345678" class="min-h-[46px] inline-flex items-center justify-center gap-2 bg-champagne hover:bg-amber-500 text-navy text-xs sm:text-sm font-bold px-5 py-2.5 rounded-full transition">
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <span>Đón khách tại sảnh (Bảo Trâm): 0912 345 678</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- HỘP THOẠI XÁC NHẬN THAM DỰ (RSVP MODAL)                               -->
+  <!-- ===================================================================== -->
+  <div id="rsvp-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-navy/70 backdrop-blur-sm p-4">
+    <div class="bg-ivory rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative max-h-[90vh] overflow-y-auto">
+      <button onclick="closeRsvpModal()" class="absolute top-5 right-5 text-slate-400 hover:text-navy p-2 rounded-full hover:bg-slate-100 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+
+      <span class="text-xs font-bold uppercase tracking-widest text-champagne">RSVP • Phản hồi lời mời</span>
+      <h3 class="font-serif text-2xl font-bold text-navy mt-1 mb-1.5">Xác nhận tham dự Lễ Tốt Nghiệp</h3>
+      <p class="text-sm text-slateText mb-5">Khách mời: <strong id="modal-guest-name" class="text-navy">Ba Mẹ</strong></p>
+
+      <form onsubmit="submitRsvp(event)" class="space-y-4">
+        <!-- Trạng thái tham dự -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slateText mb-2">Bạn có thể tham dự không?</label>
+          <div class="grid grid-cols-2 gap-2.5">
+            <label class="cursor-pointer">
+              <input type="radio" name="attendance" value="yes" checked class="peer sr-only" />
+              <div class="min-h-[48px] flex items-center justify-center p-3 rounded-2xl border border-slate-200 peer-checked:border-navy peer-checked:bg-champagneLight/70 text-center text-sm font-semibold text-navy transition">
+                Sẽ đến chung vui
+              </div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="attendance" value="no" class="peer sr-only" />
+              <div class="min-h-[48px] flex items-center justify-center p-3 rounded-2xl border border-slate-200 peer-checked:border-slate-600 peer-checked:bg-slate-100 text-center text-sm font-semibold text-slateText transition">
+                Rất tiếc bận việc
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Số lượng người đi cùng -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slateText mb-1.5">Số lượng người tham dự</label>
+          <select id="rsvp-guests-count" class="w-full min-h-[46px] rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-navy bg-white focus:border-navy outline-none">
+            <option value="1 người">1 người</option>
+            <option value="2 người">2 người</option>
+            <option value="3 - 4 người (Gia đình)">3 - 4 người (Gia đình)</option>
+          </select>
+        </div>
+
+        <!-- Khung giờ dự kiến tới chụp ảnh -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slateText mb-1.5">Khung giờ dự kiến tới chụp ảnh</label>
+          <select id="rsvp-photo-slot" class="w-full min-h-[46px] rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-navy bg-white focus:border-navy outline-none">
+            <option value="08:30 – 09:30 (Trước giờ vào Hội trường)">08:30 – 09:30 (Trước giờ làm lễ chính)</option>
+            <option value="11:00 – 12:00 (Ngay sau khi nhận bằng xong)">11:00 – 12:00 (Ngay sau khi nhận bằng xong)</option>
+            <option value="Cả buổi sáng (08:30 – 12:00)">Cả buổi sáng (08:30 – 12:00)</option>
+          </select>
+        </div>
+
+        <!-- Lời nhắn gửi Tân Cử Nhân -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slateText mb-1.5">Lời nhắn hoặc yêu cầu hỗ trợ gửi xe</label>
+          <textarea id="rsvp-note" rows="2" placeholder="Ví dụ: Nhà mình đi ô tô 7 chỗ, tới cổng sẽ gọi nhé..." class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-navy focus:border-navy outline-none"></textarea>
+        </div>
+
+        <button type="submit" class="min-h-[50px] w-full bg-navy hover:bg-navyLight text-ivory font-semibold text-sm py-3.5 rounded-2xl shadow transition active:scale-95">
+          Gửi phản hồi tới Tân Cử Nhân
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- JAVASCRIPT XỬ LÝ THAM SỐ URL, NỘI DUNG LỄ TỐT NGHIỆP & TỐI ƯU MOBILE  -->
+  <!-- ===================================================================== -->
+  <script>
+    // 1. Kho nội dung cá nhân hóa theo 3 nhóm đặc thù của Lễ Tốt Nghiệp
+    const GRADUATION_DATA = {
+      family: {
+        badge: "Thiệp mời trân trọng • Gia đình & Người thân",
+        defaultName: "Ba Mẹ",
+        salutation: (name) => `Kính mời <span class="italic text-champagne">${escapeHtml(name)}</span> <br />đến dự Lễ Tốt Nghiệp`,
+        subtitle: "Cột mốc trưởng thành sau 4 năm đại học sẽ chỉ thật sự trọn vẹn khi có sự hiện diện, ánh mắt tự hào và những lời chúc phúc của gia đình trong ngày trọng đại này.",
+        messageHeading: "Bốn năm đèn sách và điểm tựa mang tên Gia Đình",
+        messageBody: (name, gradName) => `
+          <p>Kính thưa <strong>${escapeHtml(name)}</strong>,</p>
+          <p>Suốt 4 năm giảng đường với biết bao nỗ lực, mỗi bước đi của ${escapeHtml(gradName)} đều được nâng đỡ bởi tình yêu thương, sự hy sinh thầm lặng và niềm tin vững chắc từ ${escapeHtml(name)} cùng gia đình.</p>
+          <p>Tấm bằng cử nhân sắp đón nhận không chỉ là thành quả học tập, mà là món quà tri ân chân thành nhất gửi tới ${escapeHtml(name)}. Con/cháu kính mong ${escapeHtml(name)} sắp xếp thời gian đến chung vui, chứng kiến khoảnh khắc nhận bằng và lưu giữ những bức ảnh gia đình thật ấm áp!</p>
+        `,
+        scheduleHTML: `
+          <div class="flex items-start justify-between gap-3">
+            <span class="font-bold text-navy whitespace-nowrap">08:15 – 09:15</span>
+            <span class="text-slateText text-right">Đón tiếp gia đình tại Sân Đài Phun Nước & Chụp ảnh kỷ niệm trước lễ</span>
+          </div>
+          <div class="border-t border-slate-200/80 pt-3 flex items-start justify-between gap-3">
+            <span class="font-bold text-champagne whitespace-nowrap">09:30 – 11:00</span>
+            <span class="text-navy font-medium text-right">Nghi thức Lễ Tốt Nghiệp & Trao bằng chính thức trong Hội trường Lớn</span>
+          </div>
+          <div class="border-t border-slate-200/80 pt-3 flex items-start justify-between gap-3">
+            <span class="font-bold text-navy whitespace-nowrap">11:00 – 12:00</span>
+            <span class="text-slateText text-right">Chụp ảnh đại gia đình cùng lễ phục cử nhân & Dùng bữa trưa thân mật</span>
+          </div>
+        `,
+        venueNote: `<strong>Hỗ trợ đón tiếp gia đình:</strong> Khi tới <strong>Cổng Chính (Cổng 1)</strong>, sẽ có <strong>Bảo Trâm (0912 345 678)</strong> ra đón tận cổng và hướng dẫn lối đi ngắn nhất vào ghế ngồi ưu tiên dành cho phụ huynh trong Hội trường.`,
+        parkingList: [
+          `<li class="flex items-start gap-2.5"><span class="text-champagne font-bold">•</span><span><strong>Đi ô tô gia đình:</strong> Vui lòng đi thẳng vào <strong>Cổng Chính (Cổng 1 — 268 Lý Thường Kiệt)</strong>. Bảo vệ trường sẽ hướng dẫn đỗ xe tại bãi ô tô có bóng mát ngay cạnh Hội trường Lớn (đi bộ chưa tới 40m).</span></li>`,
+          `<li class="flex items-start gap-2.5"><span class="text-champagne font-bold">•</span><span><strong>Đi xe công nghệ / Taxi:</strong> Xe có thể chạy qua cổng kiểm soát để trả ${escapeHtml(name)} ngay trước bậc thềm Sân Đài Phun Nước.</span></li>`,
+          `<li class="flex items-start gap-2.5"><span class="text-champagne font-bold">•</span><span><strong>Đi xe máy:</strong> Gửi tại <strong>Nhà xe Khu B (Cổng Phụ số 2)</strong>, có mái che an toàn và lối đi bộ bằng phẳng.</span></li>`
+        ],
+        arrivalNotes: [
+          `<li class="flex items-start gap-2.5"><span class="text-navy font-bold">•</span><span><strong>Trang phục gợi ý:</strong> Trang phục lịch sự, thoải mái (gợi ý tông màu <em>Trắng, Kem, Be hoặc Xanh Navy</em> để lên ảnh gia đình hài hòa cùng lễ phục tốt nghiệp).</span></li>`,
+          `<li class="flex items-start gap-2.5"><span class="text-navy font-bold">•</span><span><strong>Trong lúc làm lễ:</strong> Từ 09:30 – 11:00, Tân Cử Nhân tập trung theo hàng ghế sinh viên bên trong Hội trường, ${escapeHtml(name)} có thể ngồi theo dõi trực tiếp hoặc nghỉ ngơi tại sảnh có người nhà đi cùng.</span></li>`,
+          `<li class="flex items-start gap-2.5"><span class="text-navy font-bold">•</span><span><strong>Chuẩn bị nhỏ:</strong> Sân trường buổi trưa có thể hơi nắng nhẹ, gia đình mang theo một chiếc ô (dù) nhỏ và nước suối sẽ rất tiện lợi.</span></li>`
+        ],
+        closingHeading: "Con/cháu xin chân thành cảm ơn!",
+        closingBody: (name) => `Sự hiện diện của <strong>${escapeHtml(name)}</strong> là niềm hạnh phúc và niềm tự hào lớn nhất trong ngày tốt nghiệp. Kính chúc ${escapeHtml(name)} luôn dồi dào sức khỏe và bình an!`,
+        activeMapZone: "car"
+      },
+
+      friends: {
+        badge: "Thiệp mời thân thiết • Bạn bè & Đồng môn",
+        defaultName: "Hội Bạn Thân",
+        salutation: (name) => `Ê <span class="italic text-champagne">${escapeHtml(name)}</span> ơi, <br />lên đồ đi dự Lễ Tốt Nghiệp của mình nhé!`,
+        subtitle: "Sau bao mùa chạy deadline sấp mặt, làm đồ án xuyên đêm và những cữ cà phê cứu rỗi thanh xuân, cuối cùng ngày khoác áo cử nhân cũng tới rồi!",
+        messageHeading: "Thanh xuân đại học chắc chắn không thể thiếu mặt bạn",
+        messageBody: (name, gradName) => `
+          <p>Gửi <strong>${escapeHtml(name)}</strong>,</p>
+          <p>Bốn năm đại học trôi qua nhanh như một cái chớp mắt, và điều rực rỡ nhất của quãng thời gian này chính là được đồng hành, chia sẻ từng chiếc deadline và những trận cười sảng khoái cùng ${escapeHtml(name)}.</p>
+          <p>Ngày 22/11 này, ${escapeHtml(gradName)} chính thức "tốt nghiệp" khỏi kiếp sinh viên. Nhớ tranh thủ ghé trường chụp với mình một bộ ảnh kỷ yếu thật cháy để lưu giữ thanh xuân nhé!</p>
+        `,
+        scheduleHTML: `
+          <div class="flex items-start justify-between gap-3">
+            <span class="font-bold text-navy whitespace-nowrap">08:30 – 09:20</span>
+            <span class="text-slateText text-right">Hội ngộ tại Sân Đài Phun Nước • Check-in sớm trước giờ vào lễ</span>
+          </div>
+          <div class="border-t border-slate-200/80 pt-3 flex items-start justify-between gap-3">
+            <span class="font-bold text-slateText whitespace-nowrap">09:30 – 11:00</span>
+            <span class="text-slateText text-right">Mình làm lễ nhận bằng trong Hội trường (bạn có thể ghé sau 10:45 cho đỡ phải chờ lâu nha!)</span>
+          </div>
+          <div class="border-t border-slate-200/80 pt-3 flex items-start justify-between gap-3">
+            <span class="font-bold text-champagne whitespace-nowrap">11:00 – 12:30</span>
+            <span class="text-navy font-bold text-right">Khung giờ vàng chụp ảnh tung mũ cử nhân cùng hội bạn!</span>
+          </div>
+        `,
+        venueNote: `<strong>Mẹo hẹn gặp nhanh:</strong> Từ 09:30 – 11:00 mình ngồi bên trong Hội trường làm lễ nên khó nghe điện thoại. Nếu tới sớm, bạn cứ gọi <strong>Bảo Trâm (0912 345 678)</strong> hoặc ghé thẳng <strong>Sân Đài Phun Nước</strong> đợi mình bước ra nha!`,
+        parkingList: [
+          `<li class="flex items-start gap-2.5"><span class="text-champagne font-bold">•</span><span><strong>Đi xe máy:</strong> Gửi tại <strong>Nhà Xe Máy Khu B (Cổng Phụ số 2)</strong>, bãi rộng thênh thang, quẹt thẻ nhanh và đi bộ đúng 2 phút là tới sân chụp ảnh.</span></li>`,
+          `<li class="flex items-start gap-2.5"><span class="text-champagne font-bold">•</span><span><strong>Đi xe công nghệ (Grab/Be):</strong> Đặt điểm đến <em>"268 Lý Thường Kiệt - Cổng Chính"</em>, bước qua cổng là thấy ngay khu vực Backdrop chụp hình.</span></li>`,
+          `<li class="flex items-start gap-2.5"><span class="text-champagne font-bold">•</span><span><strong>Đi ô tô:</strong> Rẽ vào Cổng Chính và báo bảo vệ <em>"Khách dự Lễ Tốt Nghiệp"</em> để được hướng dẫn vào bãi đỗ.</span></li>`
+        ],
+        arrivalNotes: [
+          `<li class="flex items-start gap-2.5"><span class="text-navy font-bold">•</span><span><strong>Dress Code gợi ý:</strong> Lên đồ thật xinh/bảnh với tông <em>Trắng, Kem, Đen hoặc Xanh Navy</em> để đứng cạnh lễ phục tốt nghiệp lên hình chuẩn tạp chí!</span></li>`,
+          `<li class="flex items-start gap-2.5"><span class="text-navy font-bold">•</span><span><strong>Thời tiết & Ánh sáng:</strong> Khung 11:00 nắng đẹp nhưng hơi gắt, mang theo quạt mini cầm tay và son/phấn dặm lại là bao tươi luôn.</span></li>`,
+          `<li class="flex items-start gap-2.5"><span class="text-navy font-bold">•</span><span><strong>Quà cáp:</strong> Có mặt chụp hình cùng nhau là món quà xịn nhất rồi, không cần hoa hoét cầu kỳ đâu nha!</span></li>`
+        ],
+        closingHeading: "Hẹn gặp bạn tại sân trường nhé!",
+        closingBody: (name) => `Cảm ơn <strong>${escapeHtml(name)}</strong> vì đã là một phần thanh xuân tuyệt vời của mình. Tới nơi nhớ nháy máy để tụi mình làm ngay một album kỷ niệm thật chất nhé!`,
+        activeMapZone: "bike"
+      },
+
+      mentors: {
+        badge: "Thiệp mời kính trọng • Thầy Cô & Người Hướng Dẫn",
+        defaultName: "Thầy Minh",
+        salutation: (name) => `Trân trọng kính mời <span class="italic text-champagne">${escapeHtml(name)}</span> <br />đến chung vui Lễ Tốt Nghiệp`,
+        subtitle: "Chặng đường chinh phục tri thức và hoàn thành khóa luận tốt nghiệp của em có dấu ấn sâu sắc từ sự tận tâm dìu dắt và truyền cảm hứng của Thầy/Cô.",
+        messageHeading: "Tri ân sự tận tâm dìu dắt trên giảng đường",
+        messageBody: (name, gradName) => `
+          <p>Kính gửi <strong>${escapeHtml(name)}</strong>,</p>
+          <p>Nhìn lại suốt 4 năm học tập và nghiên cứu tại trường, em luôn khắc ghi những bài giảng tâm huyết, những góp ý sắc bén trong quá trình thực hiện đồ án tốt nghiệp cũng như sự động viên quý báu mà ${escapeHtml(name)} đã dành cho em.</p>
+          <p>Nhân dịp Lễ Tốt Nghiệp sắp tới, em ${escapeHtml(gradName)} xin trân trọng kính mời ${escapeHtml(name)} dành chút thời gian quý báu đến chung vui và cho em được vinh dự chụp cùng ${escapeHtml(name)} một bức ảnh kỷ niệm trong ngày hoàn thành khóa học.</p>
+        `,
+        scheduleHTML: `
+          <div class="flex items-start justify-between gap-3">
+            <span class="font-bold text-navy whitespace-nowrap">08:30 – 09:15</span>
+            <span class="text-slateText text-right">Đón tiếp Thầy Cô tại Sảnh Danh Dự Hội trường Lớn & Chụp ảnh lưu niệm</span>
+          </div>
+          <div class="border-t border-slate-200/80 pt-3 flex items-start justify-between gap-3">
+            <span class="font-bold text-champagne whitespace-nowrap">09:30 – 11:00</span>
+            <span class="text-navy font-medium text-right">Nghi thức Khai mạc Lễ Tốt Nghiệp & Trao bằng Cử nhân</span>
+          </div>
+          <div class="border-t border-slate-200/80 pt-3 flex items-start justify-between gap-3">
+            <span class="font-bold text-navy whitespace-nowrap">11:00 – 11:45</span>
+            <span class="text-slateText text-right">Chụp ảnh tri ân cùng Thầy Cô tại Sân Đài Phun Nước</span>
+          </div>
+        `,
+        venueNote: `<strong>Điểm đón tiếp Thầy Cô:</strong> Em xin phép được đón tiếp ${escapeHtml(name)} tại <strong>Sảnh trước Hội trường Lớn</strong> vào khung giờ 08:30 – 09:15 hoặc ngay sau khi kết thúc nghi thức trao bằng lúc 11:00.`,
+        parkingList: [
+          `<li class="flex items-start gap-2.5"><span class="text-champagne font-bold">•</span><span><strong>Khu vực đỗ xe Giảng viên & Khách mời:</strong> Vui lòng di chuyển qua <strong>Cổng Chính (Cổng 1)</strong> để vào bãi đỗ ô tô/xe máy khu vực giảng đường trung tâm ngay cạnh Hội trường Lớn.</span></li>`,
+          `<li class="flex items-start gap-2.5"><span class="text-champagne font-bold">•</span><span><strong>Lối vào thuận tiện:</strong> Bãi đỗ xe nằm sát sảnh bên của Hội trường Lớn, rất thuận tiện di chuyển giữa các khu vực.</span></li>`
+        ],
+        arrivalNotes: [
+          `<li class="flex items-start gap-2.5"><span class="text-navy font-bold">•</span><span><strong>Liên hệ trực tiếp:</strong> Khi ${escapeHtml(name)} có mặt tại khu vực Hội trường, xin vui lòng nhắn tin hoặc gọi số em <strong>0909 888 999</strong> (hoặc trợ lý đón khách <strong>0912 345 678</strong>) để em chạy ra đón ngay ạ.</span></li>`,
+          `<li class="flex items-start gap-2.5"><span class="text-navy font-bold">•</span><span><strong>Khung giờ linh hoạt:</strong> Em hoàn toàn hiểu lịch trình giảng dạy và công việc bận rộn của ${escapeHtml(name)}, nên dù ${escapeHtml(name)} ghé qua ít phút vào đầu giờ hay cuối buổi em đều vô cùng trân quý ạ.</span></li>`
+        ],
+        closingHeading: "Em xin chân thành cảm ơn và kính chúc sức khỏe!",
+        closingBody: (name) => `Một lần nữa, em xin gửi lời tri ân sâu sắc tới <strong>${escapeHtml(name)}</strong>. Kính chúc ${escapeHtml(name)} luôn dồi dào sức khỏe, hạnh phúc và tiếp tục gặt hái nhiều thành công trên sự nghiệp trồng người!`,
+        activeMapZone: "photo"
+      }
+    };
+
+    // State mặc định
+    let currentState = {
+      group: 'family',
+      name: 'Ba Mẹ',
+      grad: 'Hà Lê Tín'
+    };
+
+    // Chống XSS khi render chuỗi từ URL
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // 2. Đọc tham số URL & Tự động thu gọn thanh công cụ nếu là link gửi khách
+    function initFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const hasSharedParams = params.has('group') || params.has('name') || params.has('grad');
+
+      const rawGroup = (params.get('group') || '').toLowerCase().trim();
+      const rawName = (params.get('name') || '').trim();
+      const rawGrad = (params.get('grad') || '').trim();
+
+      const validGroup = GRADUATION_DATA[rawGroup] ? rawGroup : 'family';
+      const validName = rawName || GRADUATION_DATA[validGroup].defaultName;
+      const validGrad = rawGrad || 'Hà Lê Tín';
+
+      currentState.group = validGroup;
+      currentState.name = validName;
+      currentState.grad = validGrad;
+
+      // Điền sẵn vào ô nhập của Link Builder
+      document.getElementById('guest-name-input').value = validName;
+      document.getElementById('grad-name-input').value = validGrad;
+
+      // Nếu khách mở link đã có tham số (?group=...&name=...), tự động thu gọn thanh công cụ để tối ưu không gian Mobile
+      if (hasSharedParams) {
+        toggleBuilder(false);
+      } else {
+        toggleBuilder(true);
+      }
+
+      renderInvitation(false);
+    }
+
+    // 3. Render toàn bộ nội dung thiệp tốt nghiệp
+    function renderInvitation(animate = true) {
+      const data = GRADUATION_DATA[currentState.group];
+      const displayName = currentState.name.trim() || data.defaultName;
+      const displayGrad = currentState.grad.trim() || 'Hà Lê Tín';
+
+      // Bật/tắt chế độ chữ lớn dễ đọc cho nhóm Gia đình & Người lớn tuổi
+      if (currentState.group === 'family') {
+        document.body.classList.add('elder-friendly');
+      } else {
+        document.body.classList.remove('elder-friendly');
+      }
+
+      const animatedBlocks = document.querySelectorAll('.content-transition');
+      if (animate) {
+        animatedBlocks.forEach(el => el.classList.add('content-updating'));
+      }
+
+      setTimeout(() => {
+        // Phần 1: Opening
+        document.getElementById('opening-badge').textContent = data.badge;
+        document.getElementById('opening-salutation').innerHTML = data.salutation(displayName);
+        document.getElementById('graduate-name-display').textContent = displayGrad;
+        document.getElementById('opening-subtitle').textContent = data.subtitle;
+
+        // Phần 2: Lời mời riêng
+        document.getElementById('message-heading').textContent = data.messageHeading;
+        document.getElementById('message-body').innerHTML = data.messageBody(displayName, displayGrad);
+        document.getElementById('modal-guest-name').textContent = displayName;
+
+        // Phần 3: Thời gian & Địa điểm
+        document.getElementById('schedule-timeline').innerHTML = data.scheduleHTML;
+        document.getElementById('venue-access-note').innerHTML = data.venueNote;
+
+        // Phần 4: Gửi xe & Lưu ý
+        document.getElementById('parking-details-list').innerHTML = data.parkingList.join('');
+        document.getElementById('arrival-notes-list').innerHTML = data.arrivalNotes.join('');
+        highlightCampusZone(data.activeMapZone);
+
+        // Phần 5: Cảm ơn & Chữ ký
+        document.getElementById('closing-heading').textContent = data.closingHeading;
+        document.getElementById('closing-body').innerHTML = data.closingBody(displayName);
+        document.getElementById('closing-signature').textContent = `Tân Cử Nhân ${displayGrad}`;
+
+        // Cập nhật trạng thái nút chọn nhóm trong Link Builder
+        document.querySelectorAll('.group-tab').forEach(btn => {
+          const isMatch = btn.getAttribute('data-group-btn') === currentState.group;
+          if (isMatch) {
+            btn.className = 'group-tab py-2 px-2 rounded-lg text-xs font-bold bg-champagne text-navy shadow transition text-center';
+          } else {
+            btn.className = 'group-tab py-2 px-2 rounded-lg text-xs font-medium text-slate-300 hover:text-white transition text-center';
+          }
+        });
+
+        updateBrowserUrl(displayName, displayGrad);
+
+        if (animate) {
+          animatedBlocks.forEach(el => el.classList.remove('content-updating'));
+        }
+      }, animate ? 130 : 0);
+    }
+
+    // Tô sáng vùng cổng vào & bãi xe khuyến nghị trên Sơ đồ SVG
+    function highlightCampusZone(zone) {
+      const carRect = document.getElementById('map-zone-car');
+      const bikeRect = document.getElementById('map-zone-bike');
+      const photoRect = document.getElementById('map-zone-photo');
+
+      [carRect, bikeRect, photoRect].forEach(el => {
+        el.setAttribute('fill', '#F8FAFC');
+        el.setAttribute('stroke', '#94A3B8');
+        el.setAttribute('stroke-width', '1.5');
+      });
+
+      const targetMap = {
+        car: carRect,
+        bike: bikeRect,
+        photo: photoRect
+      };
+
+      if (targetMap[zone]) {
+        targetMap[zone].setAttribute('fill', '#F6EED8');
+        targetMap[zone].setAttribute('stroke', '#C59B27');
+        targetMap[zone].setAttribute('stroke-width', '2.5');
+      }
+    }
+
+    // Cập nhật URL không tải lại trang
+    function updateBrowserUrl(guestName, gradName) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('group', currentState.group);
+      url.searchParams.set('name', guestName);
+      if (gradName && gradName !== 'Hà Lê Tín') {
+        url.searchParams.set('grad', gradName);
+      } else {
+        url.searchParams.delete('grad');
+      }
+      window.history.replaceState({}, '', url.toString());
+      document.getElementById('preview-url-display').textContent = url.search;
+    }
+
+    // Đổi nhóm khách mời
+    function setGuestGroup(newGroup) {
+      if (!GRADUATION_DATA[newGroup]) return;
+      const prevDefault = GRADUATION_DATA[currentState.group].defaultName;
+      currentState.group = newGroup;
+
+      const inputEl = document.getElementById('guest-name-input');
+      if (!inputEl.value.trim() || inputEl.value.trim() === prevDefault) {
+        currentState.name = GRADUATION_DATA[newGroup].defaultName;
+        inputEl.value = currentState.name;
+      }
+
+      renderInvitation(true);
+    }
+
+    function handleGuestNameInput(val) {
+      currentState.name = val;
+      renderInvitation(false);
+    }
+
+    function handleGradNameInput(val) {
+      currentState.grad = val;
+      renderInvitation(false);
+    }
+
+    // Thu gọn / Mở rộng thanh Link Builder
+    function toggleBuilder(expand) {
+      const panel = document.getElementById('builder-panel');
+      const compactBtn = document.getElementById('builder-compact-btn');
+      if (expand) {
+        panel.classList.remove('hidden');
+        compactBtn.classList.add('hidden');
+        compactBtn.classList.remove('inline-flex');
+      } else {
+        panel.classList.add('hidden');
+        compactBtn.classList.remove('hidden');
+        compactBtn.classList.add('inline-flex');
+      }
+    }
+
+    // Sao chép link mời
+    function copyShareableLink() {
+      const shareUrl = window.location.href;
+      const tempInput = document.createElement('input');
+      tempInput.value = shareUrl;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+
+      showToast(`Đã sao chép link thiệp mời cho ${currentState.name || 'khách mời'}!`);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast-box');
+      document.getElementById('toast-message').textContent = msg;
+      toast.classList.remove('opacity-0', '-translate-y-3');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0', '-translate-y-3');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 3200);
+    }
+
+    // Tải file lịch .ics cho Lễ Tốt Nghiệp
+    function downloadCalendarICS() {
+      const grad = currentState.grad.trim() || 'Hà Lê Tín';
+      const icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Graduation Invitation//Class of 2026//VI',
+        'BEGIN:VEVENT',
+        'DTSTART:20261122T013000Z',
+        'DTEND:20261122T050000Z',
+        `SUMMARY:Lễ Tốt Nghiệp Đại Học — Tân Cử Nhân ${grad}`,
+        'LOCATION:Hội trường Lớn - 268 Lý Thường Kiệt, Quận 10, TP.HCM',
+        `DESCRIPTION:Thiệp mời dự Lễ Tốt Nghiệp dành riêng cho ${currentState.name}. Rất mong được đón tiếp và chụp ảnh kỷ niệm!`,
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'Le-Tot-Nghiep-2026.ics';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast('Đã tải lịch Lễ Tốt Nghiệp (.ics) về máy!');
+    }
+
+    // Modal RSVP
+    function openRsvpModal() {
+      const modal = document.getElementById('rsvp-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeRsvpModal() {
+      const modal = document.getElementById('rsvp-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function submitRsvp(e) {
+      e.preventDefault();
+      const status = document.querySelector('input[name="attendance"]:checked').value;
+      const count = document.getElementById('rsvp-guests-count').value;
+      const slot = document.getElementById('rsvp-photo-slot').value;
+      const statusText = document.getElementById('rsvp-status-text');
+      const ctaBtn = document.getElementById('rsvp-cta-btn');
+
+      if (status === 'yes') {
+        statusText.innerHTML = `<span class="text-emerald-700 font-semibold">✓ Đã xác nhận tham dự (${count}) • Khung giờ: ${slot}. Hẹn gặp tại trường nhé!</span>`;
+        ctaBtn.innerHTML = `<span>Đã xác nhận tham dự</span>`;
+        showToast('Cảm ơn bạn đã xác nhận tham dự Lễ Tốt Nghiệp!');
+      } else {
+        statusText.innerHTML = `<span class="text-slate-600 font-medium">Đã ghi nhận phản hồi. Cảm ơn lời chúc của bạn rất nhiều!</span>`;
+        ctaBtn.innerHTML = `<span>Cập nhật phản hồi</span>`;
+        showToast('Đã ghi nhận phản hồi của bạn!');
+      }
+
+      closeRsvpModal();
+    }
+
+    // Hiệu ứng cuộn trang Reveal
+    function initScrollReveal() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initFromURL();
+      initScrollReveal();
+    });
+  </script>
+</body>
+</html>

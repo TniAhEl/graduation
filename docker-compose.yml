@@ -1,0 +1,48 @@
+services:
+  # PostgreSQL Service
+  postgres:
+    image: postgres:16-alpine
+    container_name: invitation_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: invitation_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:5434:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # Spring Boot Backend Service (Port 8088)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: invitation_backend
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/invitation_db}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:?Set SPRING_DATASOURCE_PASSWORD in .env}
+      GOOGLE_MAIL_USERNAME: ${GOOGLE_MAIL_USERNAME:-}
+      GOOGLE_MAIL_PASSWORD: ${GOOGLE_MAIL_PASSWORD:-}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:?Set ADMIN_USERNAME in your .env file}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set a strong ADMIN_PASSWORD in your .env file}
+      SERVER_PORT: 8088
+    ports:
+      - "127.0.0.1:8088:8088"
+
+  # React Frontend Service (Port 3000)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: invitation_frontend
+    restart: always
+    ports:
+      - "3000:80"
+
+volumes:
+  pgdata:
