@@ -316,7 +316,7 @@ export default function InvitationLetterView({
                 }}
                 className="w-full sm:w-auto min-h-[48px] px-6 py-3 rounded-full bg-white hover:bg-champagneLight/50 text-navy border border-navy/25 text-sm font-semibold transition active:scale-95 shadow-sm"
               >
-                <span>Xác nhận tham dự (RSVP)</span>
+                <span>Xác nhận tham dự</span>
               </button>
             </div>
 

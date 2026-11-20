@@ -90,7 +90,7 @@ export default function RsvpModal({
         </button>
 
         <span className="text-xs font-bold uppercase tracking-widest text-champagne">
-          RSVP • Phản hồi lời mời
+          Phản hồi lời mời
         </span>
         <h3 className="font-serif text-2xl font-bold text-navy mt-1 mb-1.5">
           Xác nhận tham dự Lễ Tốt Nghiệp
