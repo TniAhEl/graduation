@@ -13,21 +13,44 @@ import { GRADUATION_DATA } from './data/graduationData';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
+function getInitialInvitationRoute() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code') || params.get('to');
+  const rawGroup = (params.get('group') || '').toLowerCase().trim();
+  const group = GRADUATION_DATA[rawGroup] ? rawGroup : 'family';
+
+  return {
+    code,
+    group,
+    guestName: (params.get('name') || '').trim() || GRADUATION_DATA[group].defaultName,
+    gradName: (params.get('grad') || '').trim() || 'Hà Lê Tín',
+    isGuestMode: Boolean(
+      code ||
+      params.get('view') === 'guest' ||
+      params.has('group') ||
+      params.has('name') ||
+      params.has('grad')
+    )
+  };
+}
+
 export default function App() {
+  const [initialRoute] = useState(getInitialInvitationRoute);
   // Screen state: 'ENVELOPE' (Giao diện 1) | 'LETTER' (Giao diện 2)
   const [currentScreen, setCurrentScreen] = useState('ENVELOPE');
-  const [isGuestMode, setIsGuestMode] = useState(() => {
-    const params = new URLSearchParams(window.location.search);
-    return Boolean(params.get('code') || params.get('to') || params.get('view') === 'guest');
-  });
+  const [isGuestMode, setIsGuestMode] = useState(initialRoute.isGuestMode);
   const [isAdminPreview, setIsAdminPreview] = useState(false);
 
   // Active guest group: 'family' | 'friends' | 'mentors'
-  const [currentGroup, setCurrentGroup] = useState('family');
-  const [guestName, setGuestName] = useState('Ba Mẹ');
-  const [gradName, setGradName] = useState('Hà Lê Tín');
+  const [currentGroup, setCurrentGroup] = useState(initialRoute.group);
+  const [guestName, setGuestName] = useState(initialRoute.guestName);
+  const [gradName, setGradName] = useState(initialRoute.gradName);
   const [customMessage, setCustomMessage] = useState(null);
-  const [activeCode, setActiveCode] = useState(null);
+  const [activeCode, setActiveCode] = useState(initialRoute.code);
+  const [invitationLoadStatus, setInvitationLoadStatus] = useState(
+    initialRoute.code ? 'loading' : 'idle'
+  );
+  const [invitationLoadError, setInvitationLoadError] = useState(null);
 
   // Modals state
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
@@ -104,50 +127,50 @@ export default function App() {
 
   // Read URL parameters on mount
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const codeParam = params.get('code') || params.get('to');
-    const rawGroup = (params.get('group') || '').toLowerCase().trim();
-    const rawName = (params.get('name') || '').trim();
-    const rawGrad = (params.get('grad') || '').trim();
+    if (!initialRoute.code) return undefined;
 
-    if (codeParam) {
-      setIsGuestMode(true);
-      setActiveCode(codeParam);
-      fetch(`${API_BASE_URL}/api/invitation?code=${encodeURIComponent(codeParam)}`)
-        .then(res => res.ok ? res.json() : null)
-        .then(data => {
-          if (data && data.recipientName) {
-            setGuestName(data.recipientName);
-            if (data.senderName) setGradName(data.senderName);
-            if (data.guestGroup && GRADUATION_DATA[data.guestGroup]) {
-              setCurrentGroup(data.guestGroup);
-            }
-            if (data.customMessage) {
-              setCustomMessage(data.customMessage);
-            }
-            showToast(`Đã tải thiệp mời cá nhân hóa cho "${data.recipientName}"!`);
-          }
-        })
-        .catch(err => {
-          console.warn("Backend not reachable or using local parameters:", err);
-          setGuestName(codeParam);
-        });
-    } else {
-      // 2. Standard URL query parameters fallback
-      const validGroup = GRADUATION_DATA[rawGroup] ? rawGroup : 'family';
-      const validName = rawName || GRADUATION_DATA[validGroup].defaultName;
-      const validGrad = rawGrad || 'Hà Lê Tín';
+    const controller = new AbortController();
+    const loadInvitation = async () => {
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/api/invitation?code=${encodeURIComponent(initialRoute.code)}`,
+          { signal: controller.signal }
+        );
+        if (!response.ok) {
+          throw new Error(
+            response.status === 404
+              ? 'Không tìm thấy thiệp mời này. Vui lòng kiểm tra lại đường dẫn.'
+              : `Máy chủ chưa tải được thiệp mời (HTTP ${response.status}).`
+          );
+        }
 
-      setCurrentScreen('ENVELOPE');
-      setIsGuestMode(false);
-      setIsAdminPreview(false);
-      setActiveCode(null);
+        const data = await response.json();
+        if (!data?.recipientName) {
+          throw new Error('Dữ liệu thiệp mời không hợp lệ.');
+        }
 
-      setCurrentGroup(validGroup);
-      setGuestName(validName);
-      setGradName(validGrad);
-    }
-  }, []);
+        setGuestName(data.recipientName);
+        if (data.senderName) setGradName(data.senderName);
+        if (data.guestGroup && GRADUATION_DATA[data.guestGroup]) {
+          setCurrentGroup(data.guestGroup);
+        }
+        if (data.customMessage) setCustomMessage(data.customMessage);
+        setInvitationLoadStatus('loaded');
+      } catch (error) {
+        if (error.name === 'AbortError') return;
+        console.error('Failed to load invitation:', error);
+        setInvitationLoadError(
+          error instanceof TypeError
+            ? 'Không kết nối được máy chủ để tải thiệp mời. Vui lòng thử lại sau.'
+            : error.message
+        );
+        setInvitationLoadStatus('error');
+      }
+    };
+
+    loadInvitation();
+    return () => controller.abort();
+  }, [initialRoute.code]);
 
   // Update URL params when group, name or grad changes
   const updateUrl = (newGroup, newName, newGrad) => {
@@ -285,6 +308,38 @@ export default function App() {
       return fallbackResult;
     }
   };
+
+  if (invitationLoadStatus === 'loading') {
+    return (
+      <div
+        role="status"
+        className="min-h-screen flex flex-col items-center justify-center gap-3 bg-cream text-navy px-4 text-center"
+      >
+        <div className="w-9 h-9 rounded-full border-4 border-champagne/30 border-t-champagne animate-spin" />
+        <p className="font-serif text-xl font-bold">Đang tải thiệp mời...</p>
+        <p className="text-sm text-slateText">Vui lòng đợi trong giây lát.</p>
+      </div>
+    );
+  }
+
+  if (invitationLoadStatus === 'error') {
+    return (
+      <div
+        role="alert"
+        className="min-h-screen flex flex-col items-center justify-center gap-3 bg-cream text-navy px-4 text-center"
+      >
+        <h1 className="font-serif text-2xl font-bold">Chưa tải được thiệp mời</h1>
+        <p className="max-w-md text-sm text-slateText">{invitationLoadError}</p>
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="mt-2 rounded-xl bg-navy px-5 py-2.5 text-sm font-semibold text-ivory"
+        >
+          Thử lại
+        </button>
+      </div>
+    );
+  }
 
   if (!isGuestMode && !adminCredentials) {
     return (
