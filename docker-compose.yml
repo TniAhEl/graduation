@@ -41,6 +41,8 @@ services:
       dockerfile: Dockerfile.frontend
     container_name: invitation_frontend
     restart: always
+    environment:
+      API_UPSTREAM: ${API_UPSTREAM:-http://backend:8088}
     ports:
       - "3000:80"
 

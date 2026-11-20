@@ -191,7 +191,7 @@ Hệ thống sử dụng 2 bảng chính được định nghĩa trong [schema.s
 | `custom_message` | TEXT | NULLABLE | Lời chúc/tâm thư riêng biệt lưu cho liên kết này |
 | `event_title` | VARCHAR(255) | | Tiêu đề buổi lễ |
 | `event_date` | VARCHAR(100) | | Ngày tổ chức (`22/11/2026`) |
-| `event_time` | VARCHAR(100) | | Giờ tổ chức (`08:30 – 12:30`) |
+| `event_time` | VARCHAR(100) | | Giờ tổ chức (`09:30 – 12:30`) |
 | `event_venue` | VARCHAR(255) | | Địa điểm tổ chức (Hội trường Lớn) |
 | `event_address` | VARCHAR(255) | | Địa chỉ khuôn viên trường |
 | `created_at` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Thời gian tạo liên kết |
@@ -250,6 +250,10 @@ docker compose up -d --build
 - **Frontend Nginx:** Lắng nghe tại cổng `3000` (truy cập `http://localhost:3000`).
 - **Spring Boot Backend:** Lắng nghe tại cổng `8088`.
 - **PostgreSQL Database:** Lắng nghe tại cổng `5434` trên máy host.
+
+Khi deploy frontend và backend thành hai dịch vụ riêng, đặt biến `API_UPSTREAM` của frontend bằng URL public của backend (ví dụ `https://<backend-domain>`), không thêm `/api` ở cuối. Giá trị mặc định `http://backend:8088` chỉ dùng khi cả hai chạy cùng Docker Compose.
+
+Nếu dùng PostgreSQL Aiven, backend phải dùng đúng JDBC URL, username và password trong trang connection information của Aiven. Hostname `postgres` chỉ tồn tại trong mạng nội bộ Docker Compose, không dùng được khi backend deploy độc lập.
 
 ---
 
