@@ -252,7 +252,7 @@ export default function InvitationLetterView({
             })}
           </div>
 
-          <span className="text-champagne font-bold text-xs hidden sm:inline">22.11.2026</span>
+          <span className="text-champagne font-bold text-xs hidden sm:inline">28.11.2026</span>
         </div>
       </div>
       )}
