@@ -291,7 +291,7 @@ export default function InvitationLetterView({
             <div className="inline-block bg-white/95 border border-slate-200 rounded-2xl px-6 py-3 shadow-sm mb-5">
               <p className="text-[10px] uppercase tracking-[0.2em] text-slateText font-medium mb-0.5">Tân Cử Nhân</p>
               <p className="font-serif text-xl sm:text-2xl font-bold text-navy">{displayGrad}</p>
-              <p className="text-xs text-slateText mt-0.5">Chuyên ngành Công nghệ Thông tin • Khóa 2022 – 2026</p>
+              <p className="text-xs text-slateText mt-0.5">Chuyên ngành Khoa học Máy tính • Khóa 2022 – 2026</p>
             </div>
 
             <p className="adaptive-body max-w-xl mx-auto text-base sm:text-lg text-slateText leading-relaxed mb-8">
